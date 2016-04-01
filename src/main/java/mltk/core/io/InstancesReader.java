@@ -211,6 +211,55 @@ public class InstancesReader {
 			return new Instance(vector, classValue);
 		}
 	}
+	
+	
+	/**
+     * Parses a dense instance from doubles.
+     * 
+     * @param data the double array.
+     * @param classIndex the class index.
+     * @return a dense instance from doubles.
+     */
+    public static Instance parseDenseInstance(double[] data, int classIndex) {
+        if (classIndex < 0) {
+            double[] vector = new double[data.length];
+            double classValue = Double.NaN;
+            for (int i = 0; i < data.length; i++) {
+                vector[i] = data[i];
+            }
+            return new Instance(vector, classValue);
+        } else {
+            double[] vector = new double[data.length - 1];
+            double classValue = Double.NaN;
+            for (int i = 0; i < data.length; i++) {
+                double value = data[i];
+                if (i < classIndex) {
+                    vector[i] = value;
+                } else if (i > classIndex) {
+                    vector[i - 1] = value;
+                } else {
+                    classValue = value;
+                }
+            }
+            return new Instance(vector, classValue);
+        }
+    }
+    
+    /**
+     * Parse Instances from double[][]
+     * 
+     * @param data the array of double arrays
+     * @param classIndex the class index
+     * @return Instances from a double[][]
+     */
+    public static Instances parseDenseInstances(double[][] data,int classIndex) {
+      List<Attribute> attributes = new ArrayList<>();
+      Instances instances = new Instances(attributes);
+      for (double[] dataRow : data) {
+        instances.add(InstancesReader.parseDenseInstance(dataRow, classIndex));
+      }
+      return instances;
+    } 
 
 	/**
 	 * Parses a sparse instance from strings.
