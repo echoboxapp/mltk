@@ -258,6 +258,16 @@ public class InstancesReader {
       for (double[] dataRow : data) {
         instances.add(InstancesReader.parseDenseInstance(dataRow, classIndex));
       }
+      int numAttributes = instances.get(0).getValues().length;
+      for (int i = 0; i < numAttributes; i++) {
+          Attribute att = new NumericalAttribute("f" + i);
+          att.setIndex(i);
+          attributes.add(att);
+      }
+
+      if (classIndex >= 0) {
+          assignTargetAttribute(instances);
+      }
       return instances;
     } 
 
